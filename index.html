@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>picture demo</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.20.0-0/axios.min.js"></script>
+</head>
+<body>
+  
+</body>
+<script>
+function createImg (url) {
+  var img = document.createElement('img')
+  img.src = url
+  document.body.appendChild(img)
+}
+
+// blob方式
+axios.get('http://localhost:8888/source1', {
+  responseType: 'blob',
+}).then(res => {
+  var url =  window.URL.createObjectURL(res.data) // blob
+  console.log('url', url)
+  createImg(url)
+})
+
+// arraybuffer方式
+axios.get('http://localhost:8888/source2', {
+  responseType: 'arraybuffer'
+}).then(res => {
+  var url = window.URL.createObjectURL(new Blob([res.data])) // arraybuffer
+  createImg(url)
+})
+
+// base64方式
+axios.get('http://localhost:8888/source3').then(res => {
+  var url = 'data:image/jpg;base64,' + res.data // base64方式，手动拼接前缀
+  createImg(url)
+})
+
+// base64方式
+axios.get('http://localhost:8888/source4').then(res => {
+  createImg(res.data) // 直接显示
+})
+</script>
+</html>
